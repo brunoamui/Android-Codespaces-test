@@ -38,15 +38,19 @@ Several key engineering decisions were made in creating this app:
 To build the application:
 
 1. Ensure you have the Android SDK installed (provided by the Codespace)
-2. Make the Gradle wrapper executable:
+2. Initialize the Gradle wrapper if it doesn't exist:
+   ```bash
+   gradle wrapper
+   ```
+3. Make the Gradle wrapper executable:
    ```bash
    chmod +x gradlew
    ```
-3. Build the debug APK:
+4. Build the debug APK:
    ```bash
    ./gradlew assembleDebug
    ```
-4. The APK will be generated at:
+5. The APK will be generated at:
    ```
    app/build/outputs/apk/debug/app-debug.apk
    ```
