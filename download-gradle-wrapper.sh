@@ -2,7 +2,7 @@
 # Script to download the Gradle wrapper JAR file
 
 WRAPPER_JAR_PATH="gradle/wrapper/gradle-wrapper.jar"
-WRAPPER_JAR_URL="https://github.com/gradle/gradle/raw/v7.4.2/gradle/wrapper/gradle-wrapper.jar"
+WRAPPER_JAR_URL="https://github.com/gradle/gradle/raw/v8.5/gradle/wrapper/gradle-wrapper.jar"
 
 # Create the directory structure
 mkdir -p gradle/wrapper
@@ -11,7 +11,7 @@ mkdir -p gradle/wrapper
 echo "Downloading Gradle wrapper JAR from $WRAPPER_JAR_URL"
 curl -L -o "$WRAPPER_JAR_PATH" "$WRAPPER_JAR_URL" || {
     echo "Failed to download Gradle wrapper JAR. Trying alternative URL..."
-    WRAPPER_JAR_URL="https://services.gradle.org/distributions/gradle-7.4.2-wrapper.jar"
+    WRAPPER_JAR_URL="https://services.gradle.org/distributions/gradle-8.5-wrapper.jar"
     curl -L -o "$WRAPPER_JAR_PATH" "$WRAPPER_JAR_URL" || {
         echo "Failed to download from alternative URL. Creating an empty placeholder file."
         echo "This is a placeholder for gradle-wrapper.jar" > "$WRAPPER_JAR_PATH"
