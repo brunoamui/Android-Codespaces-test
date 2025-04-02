@@ -37,6 +37,11 @@ android {
             enabled = false
         }
     }
+    
+    // Disable BuildConfig generation to avoid conflicts
+    buildFeatures {
+        buildConfig false
+    }
 }
 
 dependencies {

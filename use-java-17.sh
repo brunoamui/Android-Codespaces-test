@@ -1,57 +1,44 @@
 #!/bin/bash
 # Script to use Java 17 for Gradle builds
 
-# Check if JAVA_HOME is set
-if [ -z "$JAVA_HOME" ]; then
-    echo "JAVA_HOME is not set. Cannot determine current Java installation."
-    exit 1
+echo "Checking for Java 17..."
+
+# Try to find Java 17 using update-alternatives
+if command -v update-alternatives &> /dev/null; then
+    JAVA17_PATH=$(update-alternatives --list java | grep "java-17" | head -n 1)
+    if [ -n "$JAVA17_PATH" ]; then
+        echo "Found Java 17 via update-alternatives: $JAVA17_PATH"
+        # Extract the JDK path from the java binary path
+        JAVA17_HOME=$(dirname $(dirname "$JAVA17_PATH"))
+        echo "Setting JAVA_HOME to: $JAVA17_HOME"
+        export JAVA_HOME="$JAVA17_HOME"
+        export PATH="$JAVA_HOME/bin:$PATH"
+        java -version
+        ./gradlew "$@"
+        exit $?
+    fi
 fi
 
-# Save current Java version
-echo "Current Java version:"
-java -version
-
-# Find Java 17 in common locations
-JAVA17_PATHS=(
-    "/usr/lib/jvm/java-17-openjdk-amd64"
-    "/usr/lib/jvm/java-17-oracle"
-    "/opt/java/jdk-17"
-)
-
-JAVA17_PATH=""
-for path in "${JAVA17_PATHS[@]}"; do
-    if [ -d "$path" ]; then
-        JAVA17_PATH="$path"
-        break
-    fi
-done
-
-if [ -z "$JAVA17_PATH" ]; then
-    echo "Could not find Java 17 installation. Trying to install it..."
-    
-    # Try to install OpenJDK 17
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get update
-        sudo apt-get install -y openjdk-17-jdk
-        JAVA17_PATH="/usr/lib/jvm/java-17-openjdk-amd64"
+# If we're here, we couldn't find Java 17 via update-alternatives
+# Try to install it
+echo "Java 17 not found. Attempting to install OpenJDK 17..."
+if command -v apt-get &> /dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y openjdk-17-jdk
+    if [ $? -eq 0 ]; then
+        echo "OpenJDK 17 installed successfully"
+        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+        export PATH="$JAVA_HOME/bin:$PATH"
+        java -version
+        ./gradlew "$@"
+        exit $?
     else
-        echo "Cannot install Java 17 automatically. Please install it manually."
-        exit 1
+        echo "Failed to install OpenJDK 17"
     fi
 fi
 
-# Set JAVA_HOME to Java 17 for this session
-export JAVA_HOME_BACKUP="$JAVA_HOME"
-export JAVA_HOME="$JAVA17_PATH"
-export PATH="$JAVA_HOME/bin:$PATH"
-
-echo "Switched to Java 17 for Gradle build:"
-java -version
-
-# Run Gradle with Java 17
-echo "Running Gradle with Java 17..."
+# If we're here, we couldn't install Java 17
+# Try to run with the current Java version but with special flags
+echo "Attempting to run Gradle with current Java version and special flags..."
+export GRADLE_OPTS="$GRADLE_OPTS -Dorg.gradle.jvmargs=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED"
 ./gradlew "$@"
-
-# Restore original JAVA_HOME
-export JAVA_HOME="$JAVA_HOME_BACKUP"
-echo "Restored original Java version."
