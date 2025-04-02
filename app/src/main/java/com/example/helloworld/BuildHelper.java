@@ -18,6 +18,11 @@ public class BuildHelper {
      * @return boolean indicating debug status
      */
     public static boolean isDebugBuild() {
-        return BuildConfig.DEBUG;
+        try {
+            return BuildConfig.DEBUG;
+        } catch (Exception e) {
+            // For unit tests where BuildConfig might not be available
+            return true;
+        }
     }
 }
