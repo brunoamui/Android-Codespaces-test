@@ -16,8 +16,9 @@ mkdir -p gradle/wrapper
 # Download Gradle wrapper
 ./download-gradle-wrapper.sh
 
-# Create a simple local.properties file
-echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+# Find Android SDK and update local.properties
+chmod +x find-android-sdk.sh
+./find-android-sdk.sh
 
 # Make build scripts executable
 chmod +x gradlew
