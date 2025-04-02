@@ -21,7 +21,7 @@ echo "Using Android SDK at: $SDK_DIR"
 echo "sdk.dir=$SDK_DIR" > local.properties
 
 # Set up build directories
-BUILD_DIR="app/build/simple"
+BUILD_DIR="app/build/direct"
 mkdir -p "$BUILD_DIR/classes"
 mkdir -p "$BUILD_DIR/apk"
 
@@ -49,14 +49,33 @@ javac -d "$BUILD_DIR/classes" \
 
 if [ $? -eq 0 ]; then
   echo "Java compilation successful!"
-  echo "Classes are available at: $BUILD_DIR/classes"
   
-  # Create a simple JAR file
-  echo "Creating JAR file..."
-  jar cf "$BUILD_DIR/app.jar" -C "$BUILD_DIR/classes" .
+  # Create APK structure
+  echo "Creating APK structure..."
+  mkdir -p "$BUILD_DIR/apk/META-INF"
+  mkdir -p "$BUILD_DIR/apk/assets"
+  mkdir -p "$BUILD_DIR/apk/classes"
+  
+  # Copying compiled classes
+  echo "Copying compiled classes..."
+  cp -r "$BUILD_DIR/classes/"* "$BUILD_DIR/apk/classes/"
+  
+  # Copying resources
+  echo "Copying resources..."
+  cp -r app/src/main/res "$BUILD_DIR/apk/"
+  
+  # Create a simple AndroidManifest.xml in the APK
+  cp app/src/main/AndroidManifest.xml "$BUILD_DIR/apk/"
+  
+  # Create a simple APK
+  echo "Creating APK..."
+  cd "$BUILD_DIR/apk"
+  zip -r "../app-debug.apk" .
+  cd $(pwd | sed 's|/app/build/direct/apk||')
   
   echo "=== Build completed ==="
-  echo "JAR is available at: $BUILD_DIR/app.jar"
+  echo "APK is available at: $BUILD_DIR/app-debug.apk"
+  echo "Note: This is a simplified build and the APK may not be fully functional"
 else
   echo "Java compilation failed"
   exit 1
