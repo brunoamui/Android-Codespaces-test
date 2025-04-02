@@ -1,8 +1,18 @@
 // Top-level build file
 buildscript {
-    // Repositories are now declared in settings.gradle
+    repositories {
+        google()
+        mavenCentral()
+    }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.0'  // Updated for Java 23 compatibility
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
@@ -13,8 +23,6 @@ task clean(type: Delete) {
 // Add Java toolchain configuration to handle Java version compatibility
 allprojects {
     tasks.withType(JavaCompile).configureEach {
-        javaCompiler = javaToolchains.compilerFor {
-            languageVersion = JavaLanguageVersion.of(17)
-        }
+        options.compilerArgs.addAll(['--release', '17'])
     }
 }
