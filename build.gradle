@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.0'  // Updated for Java 23 compatibility
+        classpath 'com.android.tools.build:gradle:8.0.0'
     }
 }
 
