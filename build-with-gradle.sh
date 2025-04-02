@@ -20,14 +20,12 @@ fi
 echo "Using Android SDK at: $SDK_DIR"
 echo "sdk.dir=$SDK_DIR" > local.properties
 
-# Set Java compatibility flags for Java 23
+# Set Java compatibility flags for Java 17
 export JAVA_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED \
   --add-opens=java.base/java.lang=ALL-UNNAMED \
   --add-opens=java.base/java.lang.reflect=ALL-UNNAMED \
   --add-opens=java.base/java.io=ALL-UNNAMED \
-  --add-opens=java.base/java.net=ALL-UNNAMED \
-  --add-opens=java.base/java.nio=ALL-UNNAMED \
-  --add-opens=java.base/java.util.concurrent=ALL-UNNAMED"
+  --add-opens=java.base/java.net=ALL-UNNAMED"
 
 export GRADLE_OPTS="-Dorg.gradle.jvmargs='$JAVA_OPTS'"
 
