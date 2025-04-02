@@ -1,13 +1,12 @@
 package com.example.helloworld;
 
+import android.app.Activity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    @Override
+public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        // No references to BuildHelper to avoid potential issues
+        // Simple version that doesn't require androidx libraries
+        System.out.println("Hello World from MainActivity");
     }
 }

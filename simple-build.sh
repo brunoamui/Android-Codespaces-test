@@ -44,7 +44,8 @@ echo "Compiling Java files..."
 javac -d "$BUILD_DIR/classes" \
   -classpath "$SDK_DIR/platforms/android-33/android.jar" \
   "$BUILD_DIR/src/com/example/helloworld/BuildConfig.java" \
-  app/src/main/java/com/example/helloworld/*.java
+  app/src/main/java/com/example/helloworld/BuildHelper.java \
+  app/src/main/java/com/example/helloworld/MainActivity.java
 
 if [ $? -eq 0 ]; then
   echo "Java compilation successful!"
