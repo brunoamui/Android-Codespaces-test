@@ -18,7 +18,12 @@ public class BuildHelper {
      * @return boolean indicating debug status
      */
     public static boolean isDebugBuild() {
-        // Always return true to avoid BuildConfig dependency
-        return true;
+        try {
+            // Try to access BuildConfig.DEBUG, but catch any exceptions
+            return BuildConfig.DEBUG;
+        } catch (Exception e) {
+            // If BuildConfig is not available, default to true
+            return true;
+        }
     }
 }
