@@ -2,27 +2,45 @@
 # Script to download the Gradle wrapper JAR file
 
 WRAPPER_JAR_PATH="gradle/wrapper/gradle-wrapper.jar"
-WRAPPER_JAR_URL="https://github.com/gradle/gradle/raw/v8.5/gradle/wrapper/gradle-wrapper.jar"
+GRADLE_VERSION="8.5"
 
 # Create the directory structure
 mkdir -p gradle/wrapper
 
-# Always download a fresh copy of the wrapper JAR
-echo "Downloading Gradle wrapper JAR from $WRAPPER_JAR_URL"
-curl -L -o "$WRAPPER_JAR_PATH" "$WRAPPER_JAR_URL" || {
-    echo "Failed to download Gradle wrapper JAR. Trying alternative URL..."
-    WRAPPER_JAR_URL="https://services.gradle.org/distributions/gradle-8.5-wrapper.jar"
-    curl -L -o "$WRAPPER_JAR_PATH" "$WRAPPER_JAR_URL" || {
-        echo "Failed to download from alternative URL. Creating an empty placeholder file."
-        echo "This is a placeholder for gradle-wrapper.jar" > "$WRAPPER_JAR_PATH"
+# Try multiple sources for the Gradle wrapper JAR
+echo "Downloading Gradle wrapper JAR..."
+
+# First try: Direct download from Gradle's GitHub repository
+curl -L -o "$WRAPPER_JAR_PATH" "https://github.com/gradle/gradle/raw/v$GRADLE_VERSION/gradle/wrapper/gradle-wrapper.jar" || {
+    echo "Failed first download attempt. Trying alternative URL..."
+    
+    # Second try: From Gradle distributions
+    curl -L -o "$WRAPPER_JAR_PATH" "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-wrapper.jar" || {
+        echo "Failed second download attempt. Trying another alternative..."
+        
+        # Third try: From Maven Central
+        curl -L -o "$WRAPPER_JAR_PATH" "https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/$GRADLE_VERSION/gradle-wrapper-$GRADLE_VERSION.jar" || {
+            echo "All download attempts failed. Generating wrapper using Gradle if available..."
+            
+            # Try using system Gradle to generate the wrapper
+            if command -v gradle &> /dev/null; then
+                echo "Using system Gradle to generate wrapper..."
+                gradle wrapper --gradle-version $GRADLE_VERSION
+            else
+                echo "ERROR: Could not download or generate Gradle wrapper JAR."
+                exit 1
+            fi
+        }
     }
 }
 
-if [ -f "$WRAPPER_JAR_PATH" ]; then
-    echo "Gradle wrapper JAR is available at $WRAPPER_JAR_PATH"
+# Verify the JAR file is valid
+if [ -s "$WRAPPER_JAR_PATH" ]; then
+    echo "Gradle wrapper JAR is available at $WRAPPER_JAR_PATH ($(du -h "$WRAPPER_JAR_PATH" | cut -f1) in size)"
     # Make gradlew executable
     chmod +x gradlew
+    echo "Made gradlew executable"
 else
-    echo "Failed to create Gradle wrapper JAR"
+    echo "ERROR: Gradle wrapper JAR is empty or missing"
     exit 1
 fi

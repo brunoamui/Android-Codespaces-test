@@ -4,15 +4,30 @@
 # Set up the project
 ./setup-android-project.sh
 
-# Download the Gradle wrapper JAR
-./download-gradle-wrapper.sh
+# Initialize Gradle wrapper
+echo "Initializing Gradle wrapper..."
+chmod +x init-gradle-wrapper.sh
+./init-gradle-wrapper.sh || {
+    echo "Failed to initialize Gradle wrapper. Trying download script..."
+    chmod +x download-gradle-wrapper.sh
+    ./download-gradle-wrapper.sh
+}
+
+# Verify Gradle wrapper is working
+echo "Verifying Gradle wrapper..."
+./gradlew --version || {
+    echo "ERROR: Gradle wrapper verification failed. Cannot proceed with build."
+    exit 1
+}
 
 # Clean the project first
+echo "Cleaning project..."
 ./gradlew clean --stacktrace || {
     echo "Clean failed, but continuing with build..."
 }
 
 # Build the app
+echo "Building app..."
 ./gradlew assembleDebug --stacktrace
 
 # Check if build was successful
@@ -28,5 +43,5 @@ else
     echo "Android SDK location:"
     echo $ANDROID_SDK_ROOT
     echo "Gradle version:"
-    ./gradlew --version
+    ./gradlew --version || echo "Gradle wrapper not working"
 fi

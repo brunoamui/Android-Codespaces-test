@@ -13,16 +13,22 @@ mkdir -p app/src/test/java/com/example/helloworld
 mkdir -p app/src/androidTest/java/com/example/helloworld
 mkdir -p gradle/wrapper
 
-# Download Gradle wrapper
-./download-gradle-wrapper.sh
-
 # Find Android SDK and update local.properties
 chmod +x find-android-sdk.sh
 ./find-android-sdk.sh
 
-# Make build scripts executable
+# Initialize Gradle wrapper
+chmod +x init-gradle-wrapper.sh
+./init-gradle-wrapper.sh || {
+    echo "Failed to initialize Gradle wrapper. Trying download script..."
+    chmod +x download-gradle-wrapper.sh
+    ./download-gradle-wrapper.sh
+}
+
+# Make all scripts executable
 chmod +x gradlew
 chmod +x build-app.sh
 chmod +x download-gradle-wrapper.sh
+chmod +x init-gradle-wrapper.sh
 
 echo "Android project setup complete!"
