@@ -19,3 +19,12 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// Add Java toolchain configuration to handle Java version compatibility
+allprojects {
+    tasks.withType(JavaCompile).configureEach {
+        javaCompiler = javaToolchains.compilerFor {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+}

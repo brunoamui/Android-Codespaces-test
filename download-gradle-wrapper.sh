@@ -2,7 +2,7 @@
 # Script to download the Gradle wrapper JAR file
 
 WRAPPER_JAR_PATH="gradle/wrapper/gradle-wrapper.jar"
-GRADLE_VERSION="8.5"
+GRADLE_VERSION="8.0"
 
 # Create the directory structure
 mkdir -p gradle/wrapper

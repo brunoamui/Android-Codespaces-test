@@ -13,22 +13,25 @@ chmod +x init-gradle-wrapper.sh
     ./download-gradle-wrapper.sh
 }
 
-# Verify Gradle wrapper is working
-echo "Verifying Gradle wrapper..."
-./gradlew --version || {
+# Make Java 17 script executable
+chmod +x use-java-17.sh
+
+# Verify Gradle wrapper is working with Java 17
+echo "Verifying Gradle wrapper with Java 17..."
+./use-java-17.sh --version || {
     echo "ERROR: Gradle wrapper verification failed. Cannot proceed with build."
     exit 1
 }
 
 # Clean the project first
 echo "Cleaning project..."
-./gradlew clean --stacktrace || {
+./use-java-17.sh clean --stacktrace || {
     echo "Clean failed, but continuing with build..."
 }
 
 # Build the app
 echo "Building app..."
-./gradlew assembleDebug --stacktrace
+./use-java-17.sh assembleDebug --stacktrace
 
 # Check if build was successful
 if [ $? -eq 0 ]; then
