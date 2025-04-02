@@ -39,11 +39,28 @@ public final class BuildConfig {
 }
 EOF
 
+# Create a simple R class to avoid compilation errors
+cat > "$BUILD_DIR/src/com/example/helloworld/R.java" << EOF
+package com.example.helloworld;
+
+public final class R {
+    public static final class layout {
+        public static final int activity_main = 0x7f030001;
+    }
+    
+    public static final class id {
+        public static final int button_click_me = 0x7f070001;
+        public static final int text_hello_world = 0x7f070002;
+    }
+}
+EOF
+
 # Compile Java files
 echo "Compiling Java files..."
 javac -d "$BUILD_DIR/classes" \
   -classpath "$SDK_DIR/platforms/android-33/android.jar" \
   "$BUILD_DIR/src/com/example/helloworld/BuildConfig.java" \
+  "$BUILD_DIR/src/com/example/helloworld/R.java" \
   app/src/main/java/com/example/helloworld/BuildHelper.java \
   app/src/main/java/com/example/helloworld/MainActivity.java
 
