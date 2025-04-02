@@ -1,18 +1,8 @@
 // Top-level build file
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
+    // Repositories are now declared in settings.gradle
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.0'  // Updated for Java 23 compatibility
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
     }
 }
 
