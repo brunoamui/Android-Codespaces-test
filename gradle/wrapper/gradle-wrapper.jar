@@ -1,2 +1,2 @@
-# This is a placeholder for the gradle-wrapper.jar binary file
-# The actual binary file will be downloaded when you run the wrapper
+# This file should be a binary JAR file
+# Since we can't include binary content directly, we'll need to download it

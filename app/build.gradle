@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace 'com.example.helloworld'  // Add namespace explicitly
     compileSdk 33
 
     defaultConfig {
@@ -11,6 +12,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
